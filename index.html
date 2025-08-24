@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generator Teks Undangan WA</title>
+  <style>
+    :root{
+      --bg:#141414; --card:#1f1f1f; --muted:#b3b3b3; 
+      --text:#ffffff; --accent:#e50914; --accent-2:#db0510; --ring:#333333; 
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:900px;margin:0 auto;padding:24px}
+    .card{background:var(--card);border-radius:12px;padding:24px;box-shadow:0 10px 40px #0009}
+    h1{font-size:clamp(22px,3.2vw,32px);margin:0 0 8px;color:var(--accent)}
+    p.subtitle{color:var(--muted);margin-top:0}
+    .grid{display:grid;gap:20px}
+    @media(min-width:760px){.grid{grid-template-columns:1.1fr 1.2fr}}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type="text"],textarea,select{width:100%;padding:12px 14px;border-radius:6px;border:1px solid var(--ring);background:#0f0f0f;color:var(--text);outline:none;font-size:14px}
+    textarea{min-height:360px;resize:vertical;line-height:1.55}
+    .row{display:flex;gap:10px;align-items:center}
+    .row > *{flex:1}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    button,a.btn{appearance:none;border:none;cursor:pointer;padding:10px 14px;border-radius:6px;font-weight:600;font-size:14px;color:#fff;background:var(--accent);box-shadow:0 6px 16px #000a;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:.25s}
+    button.secondary{background:var(--accent-2)}
+    .ghost{background:transparent;border:1px solid var(--ring);color:var(--text)}
+    button:hover,a.btn:hover{filter:brightness(1.2)}
+    .pill{display:inline-block;font-size:12px;padding:4px 10px;border:1px dashed var(--ring);border-radius:999px;color:var(--muted)}
+    .preview{white-space:pre-wrap;background:#0f0f0f;border:1px solid var(--ring);border-radius:6px;padding:14px}
+    .footer{color:var(--muted);font-size:12px;text-align:center;margin-top:14px}
+    .badge{font-size:11px;padding:2px 8px;border-radius:999px;background:#e5091422;color:#ff6666}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Generator Teks Undangan WhatsApp <span class="badge">Netflix Style</span></h1>
+      <p class="subtitle">Masukkan nama penerima undangan. Link otomatis <span class="pill">...?to=Nama</span> bisa langsung <b>Copy</b> atau <b>Share ke WhatsApp</b>.</p>
+
+      <div class="grid">
+        <section>
+          <div class="row">
+            <div>
+              <label for="name">Nama Penerima</label>
+              <input id="name" type="text" placeholder="Name" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="domain">Domain Link</label>
+              <input id="domain" type="text" value="https://invitation-juledy.vercel.app/" readonly />
+            </div>
+            <div>
+              <label for="honorific">Sapaan</label>
+              <select id="honorific">
+                <option value="Yth.">Yth.</option>
+                <option value="Kpd Yth.">Kpd Yth.</option>
+                <option value="Bpk/Ibu/Sdr/i Yth.">Bpk/Ibu/Sdr/i Yth.</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="btns">
+            <button id="generate">⚡ Generate Teks</button>
+            <button id="copy">📋 Salin Teks</button>
+            <a id="share-wa" class="btn" href="#" target="_blank" rel="noopener">🟢 Bagikan ke WhatsApp</a>
+            <button id="copy-link" class="secondary">🔗 Salin Link Undangan</button>
+            <button id="reset" class="ghost">↺ Reset</button>
+          </div>
+        </section>
+
+        <section>
+          <label for="output">Preview Pesan</label>
+          <textarea id="output" readonly></textarea>
+          <div style="margin-top:10px">
+            <div class="preview" id="linkPreview"></div>
+          </div>
+        </section>
+      </div>
+
+      <p class="footer">Dibuat untuk Edy 🎬 Style Netflix</p>
+    </div>
+  </div>
+
+<script>
+  const el = (id)=>document.getElementById(id);
+  const nameInput = el('name');
+  const domainInput = el('domain');
+  const honorSel = el('honorific');
+  const output = el('output');
+  const linkPreview = el('linkPreview');
+  const copyBtn = el('copy');
+  const shareBtn = el('share-wa');
+  const copyLinkBtn = el('copy-link');
+  const resetBtn = el('reset');
+  const genBtn = el('generate');
+
+  const template = ({name, domain, honorific}) => {
+    const base = domain.replace(/\/$/, '');
+    const link = `${base}/?to=${encodeURIComponent(name)}`;
+    return {
+      text:
+`Assalamu'alaikum Wr. Wb
+
+${honorific} ${name}
+
+Dengan penuh rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada acara pernikahan kami:
+
+Siti Juliazi Putri & Edy Setyawan
+
+Informasi lengkap mengenai acara dapat dilihat melalui tautan berikut :
+ 
+${link}
+
+Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan turut mendoakan.
+
+Mohon maaf, undangan ini hanya kami sampaikan melalui pesan digital.
+
+Atas perhatian dan doa restunya, kami ucapkan terima kasih.
+
+Petunjuk Lokasi :
+https://maps.app.goo.gl/M1uoQ6aXmKy4g1n98
+
+Wassalamu'alaikum Wr. Wb.
+Terima Kasih.`,
+      link
+    };
+  };
+
+  function update(){
+    const name = (nameInput.value || '').trim() || 'Nama';
+    const domain = domainInput.value;
+    const honorific = honorSel.value;
+    const {text, link} = template({name, domain, honorific});
+    output.value = text;
+    linkPreview.textContent = link;
+    shareBtn.href = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  }
+
+  // --- Event Binding ---
+  genBtn.addEventListener('click', update); // tombol generate manual
+  copyBtn.addEventListener('click', async ()=>{await navigator.clipboard.writeText(output.value);toast('Teks disalin ✅')});
+  copyLinkBtn.addEventListener('click', async ()=>{await navigator.clipboard.writeText(linkPreview.textContent);toast('Link disalin ✅')});
+  resetBtn.addEventListener('click', ()=>{nameInput.value=''; honorSel.value='Yth.'; update();});
+
+  function toast(msg){
+    const t=document.createElement('div');
+    t.textContent=msg;
+    t.style.cssText='position:fixed;left:50%;top:20px;transform:translateX(-50%);background:#1f1f1f;color:#fff;padding:10px 14px;border:1px solid #333;border-radius:6px;box-shadow:0 6px 16px #0006;z-index:9999;font-size:13px';
+    document.body.appendChild(t);
+    setTimeout(()=>{t.style.transition='all .3s';t.style.opacity='0';t.style.transform='translateX(-50%) translateY(-6px)'},1200);
+    setTimeout(()=>t.remove(),1600);
+  }
+
+  // generate default on load
+  update();
+</script>
+</body>
+</html>
